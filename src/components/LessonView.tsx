@@ -29,6 +29,7 @@ interface LessonViewProps {
   onCompleteMission: (lessonId: number) => boolean;
   onBackToMissions: () => void;
   onNavigateLesson: (lessonId: number) => void;
+  onOpenBook?: (page?: number) => void;
 }
 
 export function LessonView({
@@ -43,6 +44,7 @@ export function LessonView({
   onCompleteMission,
   onBackToMissions,
   onNavigateLesson,
+  onOpenBook,
 }: LessonViewProps) {
   const [expandedVerse, setExpandedVerse] = useState<number | null>(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
@@ -562,6 +564,7 @@ export function LessonView({
         title={lesson.reading}
         page={lesson.pdfPage}
         onClose={() => setBookOpen(false)}
+        onOpenFullBook={onOpenBook}
       />
     </article>
   );

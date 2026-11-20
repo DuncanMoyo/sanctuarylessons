@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
-export type AppView = 'home' | 'missions' | 'blueprint' | 'journal' | 'about' | 'lesson';
+export type AppView = 'home' | 'missions' | 'blueprint' | 'book' | 'journal' | 'about' | 'lesson';
 
 interface NavbarProps {
   activeView: AppView;
@@ -14,6 +14,7 @@ const NAV_ITEMS: { id: Exclude<AppView, 'lesson'>; label: string }[] = [
   { id: 'home', label: 'Home' },
   { id: 'missions', label: 'Missions' },
   { id: 'blueprint', label: 'Blueprint' },
+  { id: 'book', label: 'Book' },
   { id: 'journal', label: 'Journal' },
   { id: 'about', label: 'About' },
 ];

@@ -13,6 +13,7 @@ interface HomeViewProps {
   onSignIn: () => void;
   onOpenMissions: () => void;
   onOpenBlueprint: () => void;
+  onOpenBook: (page?: number) => void;
   onOpenLesson: (id: number) => void;
 }
 
@@ -25,6 +26,7 @@ export function HomeView({
   onSignIn,
   onOpenMissions,
   onOpenBlueprint,
+  onOpenBook,
   onOpenLesson,
 }: HomeViewProps) {
   const rank = getRankForXp(xp);
@@ -64,6 +66,14 @@ export function HomeView({
               <span>Explore Sanctuary Blueprint</span>
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => onOpenBook(2)}
+            className="mt-4 self-start text-xs font-medium text-[#9CAEC4] transition-colors hover:text-[#E6B35A]"
+          >
+            Or read the complete 1914 book (50 chapters, 166 pages) directly in the app →
+          </button>
         </div>
 
         <div className="lg:col-span-5">

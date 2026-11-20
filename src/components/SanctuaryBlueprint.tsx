@@ -9,6 +9,7 @@ import { TypologyDrill } from './TypologyDrill';
 interface SanctuaryBlueprintProps {
   completedMissions: number[];
   onOpenMission: (missionId: number) => void;
+  onOpenBook?: (page?: number) => void;
 }
 
 type PerspectiveMode = 'earthly' | 'christ';
@@ -18,6 +19,7 @@ type ServiceTraceMode = 'stations' | 'daily' | 'atonement';
 export function SanctuaryBlueprint({
   completedMissions,
   onOpenMission,
+  onOpenBook,
 }: SanctuaryBlueprintProps) {
   const [explorerMode, setExplorerMode] = useState<ExplorerMode>('floorplan');
   const [selectedId, setSelectedId] = useState<string>('altar');
@@ -617,6 +619,7 @@ export function SanctuaryBlueprint({
         title={`${selectedStation.name} · ${linkedLesson.reading}`}
         page={selectedStation.pdfPage}
         onClose={() => setBookOpen(false)}
+        onOpenFullBook={onOpenBook}
       />
     </section>
   );

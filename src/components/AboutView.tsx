@@ -13,6 +13,7 @@ interface AboutViewProps {
   onSignIn: () => void;
   onSignOut: () => void;
   onBackHome: () => void;
+  onOpenBook: (page?: number) => void;
   onResetProgress: () => void;
 }
 
@@ -24,6 +25,7 @@ export function AboutView({
   onSignIn,
   onSignOut,
   onBackHome,
+  onOpenBook,
   onResetProgress,
 }: AboutViewProps) {
   const [confirmingReset, setConfirmingReset] = useState(false);
@@ -48,11 +50,12 @@ export function AboutView({
 
         <div className="mt-5 space-y-4 text-base leading-relaxed text-[#CBD5E1]">
           <p>
-            This interactive study journey is inspired by S. N. Haskell’s{' '}
-            <em className="text-[#F8FAFC]">The Cross and Its Shadow</em>. It pairs reading prompts with Bible passages, interactive blueprint and feast explorers, knowledge checks, and personal reflection.
+            This interactive study journey includes the complete 1914 text and pages of S. N. Haskell’s{' '}
+            <em className="text-[#F8FAFC]">The Cross and Its Shadow</em>. It pairs full-chapter reading with Bible passages, interactive blueprint and prophetic explorers, knowledge checks, and personal reflection.
           </p>
           <p>
-            The missions are a guided learning framework, not a replacement for reading the book. Some lesson titles and groupings are thematic; follow the book’s actual chapter sequence when reading.
+            You can read every chapter directly inside the{' '}
+            <strong className="font-medium text-[#F8FAFC]">Book</strong> tab, view the original 1914 typeset pages, or jump straight from any mission or sanctuary station to Haskell’s corresponding chapter.
           </p>
           <p>
             Progress is always saved automatically on this device, and you can optionally sign in with Google below to sync your completed missions, XP, Scripture checkboxes, and study journal across devices.
@@ -71,11 +74,19 @@ export function AboutView({
 
           <button
             type="button"
-            onClick={() => setBookOpen(true)}
+            onClick={() => onOpenBook(2)}
             className="inline-flex items-center gap-2 rounded-lg border border-[#243450] bg-[#0D1627] px-4 py-2.5 text-sm font-semibold text-[#CBD5E1] transition-colors hover:border-[#E6B35A]/60 hover:text-[#F8FAFC]"
           >
             <BookOpen className="h-4 w-4 text-[#E6B35A]" />
-            <span>Open The Cross and Its Shadow (1914 PDF)</span>
+            <span>Read Full Book (50 Chapters)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setBookOpen(true)}
+            className="inline-flex items-center gap-2 rounded-lg border border-[#243450] bg-[#0D1627] px-4 py-2.5 text-sm font-medium text-[#9CAEC4] transition-colors hover:border-[#E6B35A]/60 hover:text-[#F8FAFC]"
+          >
+            <span>Quick Reader Modal</span>
           </button>
         </div>
       </div>
@@ -234,6 +245,7 @@ export function AboutView({
         title="Author’s Preface & Complete 1914 Volume"
         page={2}
         onClose={() => setBookOpen(false)}
+        onOpenFullBook={onOpenBook}
       />
     </section>
   );
