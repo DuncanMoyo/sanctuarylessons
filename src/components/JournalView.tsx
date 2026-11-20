@@ -30,10 +30,10 @@ export function JournalView({ notes, onOpenLesson }: JournalViewProps) {
     }
   };
 
-  const handleExport = () => {
+  const handleExportText = () => {
     const lines = [
       'SANCTUARY QUEST — STUDY JOURNAL',
-      'Inspired by The Cross and Its Shadow by S. N. Haskell',
+      'Inspired by The Cross and Its Shadow by S. N. Haskell (1914)',
       '======================================================',
       '',
     ];
@@ -42,6 +42,7 @@ export function JournalView({ notes, onOpenLesson }: JournalViewProps) {
       const note = (notes[lesson.id] || '').trim();
       if (note) {
         lines.push(`Mission ${String(lesson.id + 1).padStart(2, '0')}: ${lesson.title}`);
+        lines.push(`Reading: ${lesson.reading}`);
         lines.push(`Challenge: ${lesson.challenge}`);
         lines.push(`Notes:\n${note}`);
         lines.push('');
@@ -55,6 +56,52 @@ export function JournalView({ notes, onOpenLesson }: JournalViewProps) {
     const link = document.createElement('a');
     link.href = url;
     link.download = 'sanctuary-quest-journal.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportMarkdown = () => {
+    const lines = [
+      '# Sanctuary Quest — Study Journal',
+      '',
+      '*Inspired by **The Cross and Its Shadow** by S. N. Haskell (1914)*',
+      '',
+    ];
+
+    LESSONS.forEach((lesson) => {
+      const note = (notes[lesson.id] || '').trim();
+      if (note) {
+        lines.push(`## Mission ${String(lesson.id + 1).padStart(2, '0')}: ${lesson.title}`);
+        lines.push(`- **Category:** ${lesson.category}`);
+        lines.push(`- **Reading:** ${lesson.reading}`);
+        lines.push(`- **Mystery Challenge:** ${lesson.challenge}`);
+        lines.push('');
+        lines.push('### Personal Notes');
+        lines.push(note);
+        lines.push('');
+        if (lesson.typeAntitype.length > 0) {
+          lines.push('### Type & Antitype Reference');
+          lines.push('| Type (Shadow) | Antitype (Fulfillment) |');
+          lines.push('| :--- | :--- |');
+          lesson.typeAntitype.forEach((row) => {
+            lines.push(
+              `| **${row.typeRef}** — ${row.typeText} | **${row.antitypeRef}** — ${row.antitypeText} |`
+            );
+          });
+          lines.push('');
+        }
+        lines.push('---');
+        lines.push('');
+      }
+    });
+
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'sanctuary-quest-journal.md';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -81,18 +128,26 @@ export function JournalView({ notes, onOpenLesson }: JournalViewProps) {
             <button
               type="button"
               onClick={() => window.print()}
-              className="inline-flex items-center gap-2 rounded-lg border border-[#243450] bg-[#111A2B] px-4 py-2.5 text-sm font-medium text-[#E2E8F0] transition-colors hover:border-[#E6B35A]/60 hover:text-[#F8FAFC] whitespace-nowrap shrink-0"
+              className="inline-flex items-center gap-2 rounded-lg border border-[#243450] bg-[#111A2B] px-3.5 py-2 text-xs font-medium text-[#E2E8F0] transition-colors hover:border-[#E6B35A]/60 hover:text-[#F8FAFC] whitespace-nowrap shrink-0"
             >
-              <Printer className="h-4 w-4 text-[#E6B35A]" />
+              <Printer className="h-3.5 w-3.5 text-[#E6B35A]" />
               <span>Print</span>
             </button>
             <button
               type="button"
-              onClick={handleExport}
-              className="inline-flex items-center gap-2 rounded-lg border border-[#243450] bg-[#111A2B] px-4 py-2.5 text-sm font-medium text-[#E2E8F0] transition-colors hover:border-[#E6B35A]/60 hover:text-[#F8FAFC] whitespace-nowrap shrink-0"
+              onClick={handleExportText}
+              className="inline-flex items-center gap-2 rounded-lg border border-[#243450] bg-[#111A2B] px-3.5 py-2 text-xs font-medium text-[#E2E8F0] transition-colors hover:border-[#E6B35A]/60 hover:text-[#F8FAFC] whitespace-nowrap shrink-0"
             >
-              <Download className="h-4 w-4 text-[#E6B35A]" />
-              <span>Export Notes</span>
+              <Download className="h-3.5 w-3.5 text-[#E6B35A]" />
+              <span>Export .txt</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleExportMarkdown}
+              className="inline-flex items-center gap-2 rounded-lg border border-[#243450] bg-[#111A2B] px-3.5 py-2 text-xs font-medium text-[#E2E8F0] transition-colors hover:border-[#E6B35A]/60 hover:text-[#F8FAFC] whitespace-nowrap shrink-0"
+            >
+              <Download className="h-3.5 w-3.5 text-[#4DC0B0]" />
+              <span>Export .md</span>
             </button>
           </div>
         )}

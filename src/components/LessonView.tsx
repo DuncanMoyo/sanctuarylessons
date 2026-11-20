@@ -14,6 +14,7 @@ import { LESSONS, Lesson } from '../data/lessons';
 import { BookReaderModal } from './BookReaderModal';
 import { AtonementSequencer, FeastTimeline } from './FeastTimeline';
 import { HighPriestExplorer } from './HighPriestExplorer';
+import { PropheticTimeline } from './PropheticTimeline';
 import { ResilientImage } from './ResilientImage';
 
 interface LessonViewProps {
@@ -220,7 +221,7 @@ export function LessonView({
                   >
                     <div className="p-4 sm:p-5">
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
-                        <span className="print-muted text-xs font-semibold uppercase tracking-wider text-[#9CAEC4]">
+                        <span className="print-muted text-xs font-semibold text-[#9CAEC4]">
                           Type · Old Testament Shadow
                         </span>
                         <span className="print-accent font-mono text-xs font-semibold text-[#E6B35A]">
@@ -233,7 +234,7 @@ export function LessonView({
                     </div>
                     <div className="bg-[#0A101D] print-surface p-4 sm:p-5">
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
-                        <span className="print-muted text-xs font-semibold uppercase tracking-wider text-[#4DC0B0]">
+                        <span className="print-muted text-xs font-semibold text-[#4DC0B0]">
                           Antitype · Fulfillment in Christ
                         </span>
                         <span className="font-mono text-xs font-semibold text-[#4DC0B0]">
@@ -250,7 +251,7 @@ export function LessonView({
             </section>
           )}
 
-          {/* Interactive Modules Embedded for Mission 8 (High Priest), Mission 10 (Annual Feasts) & Mission 11 (Day of Atonement) */}
+          {/* Interactive Modules Embedded for Mission 8 (High Priest), Mission 10 (Annual Feasts), Mission 11 (Day of Atonement) & Mission 12 (2,300-Day Prophecy) */}
           {lesson.id === 7 && (
             <section className="no-print">
               <h2 className="font-display text-2xl font-semibold text-[#F8FAFC] mb-3">
@@ -275,6 +276,15 @@ export function LessonView({
                 Interactive Day of Atonement Sequencer
               </h2>
               <AtonementSequencer compact />
+            </section>
+          )}
+
+          {lesson.id === 11 && (
+            <section className="no-print">
+              <h2 className="font-display text-2xl font-semibold text-[#F8FAFC] mb-3">
+                Interactive 2,300-Day Prophetic Timeline
+              </h2>
+              <PropheticTimeline compact />
             </section>
           )}
 

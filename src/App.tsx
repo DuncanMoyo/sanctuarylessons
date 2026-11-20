@@ -131,6 +131,10 @@ export default function App() {
         {activeView === 'missions' && (
           <MissionsView
             completed={completed}
+            readVerses={readVerses}
+            quizBonusEarned={quizBonusEarned}
+            notes={notes}
+            onToggleVerseRead={toggleVerseRead}
             onOpenLesson={handleOpenLesson}
           />
         )}
@@ -179,7 +183,7 @@ export default function App() {
         )}
       </main>
 
-      <footer className="border-t border-[#243450]/80 py-8 text-center text-xs leading-relaxed text-[#9CAEC4]">
+      <footer className="no-print border-t border-[#243450]/80 py-8 text-center text-xs leading-relaxed text-[#9CAEC4]">
         <div className="mx-auto max-w-[1160px] px-5 sm:px-8">
           <p>
             A Bible learning adventure inspired by{' '}

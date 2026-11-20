@@ -32,7 +32,7 @@ export function Navbar({
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[#243450] bg-[#090F1A]/90 backdrop-blur-md">
+    <header className="no-print sticky top-0 z-30 border-b border-[#243450] bg-[#090F1A]/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1160px] items-center justify-between gap-8 px-5 py-4 sm:px-8">
         {/* Zone 1: Single text element wordmark */}
         <button

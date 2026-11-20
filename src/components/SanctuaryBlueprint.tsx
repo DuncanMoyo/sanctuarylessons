@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { ArrowRight, BookOpen, Compass, Layers } from 'lucide-react';
 import { LESSONS, SANCTUARY_STATIONS, SanctuaryStation } from '../data/lessons';
+import { BookReaderModal } from './BookReaderModal';
 import { AtonementSequencer, FeastTimeline } from './FeastTimeline';
+import { PropheticTimeline } from './PropheticTimeline';
+import { TypologyDrill } from './TypologyDrill';
 
 interface SanctuaryBlueprintProps {
   completedMissions: number[];
@@ -9,7 +12,8 @@ interface SanctuaryBlueprintProps {
 }
 
 type PerspectiveMode = 'earthly' | 'christ';
-type ExplorerMode = 'floorplan' | 'feasts' | 'atonement';
+type ExplorerMode = 'floorplan' | 'feasts' | 'atonement' | 'prophecy' | 'typology';
+type ServiceTraceMode = 'stations' | 'daily' | 'atonement';
 
 export function SanctuaryBlueprint({
   completedMissions,
@@ -18,6 +22,8 @@ export function SanctuaryBlueprint({
   const [explorerMode, setExplorerMode] = useState<ExplorerMode>('floorplan');
   const [selectedId, setSelectedId] = useState<string>('altar');
   const [perspective, setPerspective] = useState<PerspectiveMode>('earthly');
+  const [serviceTrace, setServiceTrace] = useState<ServiceTraceMode>('stations');
+  const [bookOpen, setBookOpen] = useState(false);
 
   const selectedStation: SanctuaryStation =
     SANCTUARY_STATIONS.find((s) => s.id === selectedId) ?? SANCTUARY_STATIONS[1];
@@ -26,16 +32,16 @@ export function SanctuaryBlueprint({
 
   return (
     <section className="mx-auto max-w-[1160px] px-5 py-10 sm:px-8 sm:py-12">
-      <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      <div className="mb-8 flex flex-col gap-5">
         <div className="max-w-2xl">
           <p className="text-xs font-medium tracking-wider text-[#E6B35A]">
-            Interactive Architectural & Prophetic Study
+            Interactive Architectural &amp; Prophetic Study
           </p>
           <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-[#F8FAFC] sm:text-5xl text-balance">
             Sanctuary Visual Explorer
           </h1>
           <p className="mt-3 text-base leading-relaxed text-[#9CAEC4]">
-            Examine the wilderness tabernacle layout, trace the seven annual feasts of Leviticus 23, and step through the Day of Atonement ritual.
+            Examine the wilderness tabernacle layout, trace daily vs. yearly priestly ministry, study the seven feasts, follow the 2,300-day prophecy, and review Type &amp; Antitype pairs.
           </p>
         </div>
 
@@ -78,6 +84,28 @@ export function SanctuaryBlueprint({
           >
             Day of Atonement
           </button>
+          <button
+            type="button"
+            onClick={() => setExplorerMode('prophecy')}
+            className={`rounded-lg px-3.5 py-2 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
+              explorerMode === 'prophecy'
+                ? 'bg-[#E6B35A] text-[#0F172A]'
+                : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
+            }`}
+          >
+            2,300-Day Prophecy
+          </button>
+          <button
+            type="button"
+            onClick={() => setExplorerMode('typology')}
+            className={`rounded-lg px-3.5 py-2 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
+              explorerMode === 'typology'
+                ? 'bg-[#E6B35A] text-[#0F172A]'
+                : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
+            }`}
+          >
+            Typology Review
+          </button>
         </div>
       </div>
 
@@ -89,6 +117,14 @@ export function SanctuaryBlueprint({
         <AtonementSequencer onOpenMission={onOpenMission} />
       )}
 
+      {explorerMode === 'prophecy' && (
+        <PropheticTimeline onOpenMission={onOpenMission} />
+      )}
+
+      {explorerMode === 'typology' && (
+        <TypologyDrill onOpenMission={onOpenMission} />
+      )}
+
       {explorerMode === 'floorplan' && (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-stretch">
           {/* Left Zone: Architectural Blueprint Canvas */}
@@ -96,36 +132,80 @@ export function SanctuaryBlueprint({
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs text-[#9CAEC4]">
               <span className="inline-flex items-center gap-1.5 font-medium text-[#CBD5E1]">
                 <Compass className="h-4 w-4 text-[#E6B35A]" />
-                <span>Scale Reference: 100 × 50 Cubits (East to West)</span>
+                <span>Scale: 100 × 50 Cubits (East to West)</span>
               </span>
 
-              <div
-                role="group"
-                aria-label="Study perspective"
-                className="inline-flex rounded-lg border border-[#243450] bg-[#0B1220] p-0.5"
-              >
-                <button
-                  type="button"
-                  onClick={() => setPerspective('earthly')}
-                  className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 ${
-                    perspective === 'earthly'
-                      ? 'bg-[#E6B35A] text-[#0F172A]'
-                      : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
-                  }`}
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Service Trace Toggle */}
+                <div
+                  role="group"
+                  aria-label="Ministry trace overlay"
+                  className="inline-flex rounded-lg border border-[#243450] bg-[#0B1220] p-0.5"
                 >
-                  Earthly Pattern
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPerspective('christ')}
-                  className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 ${
-                    perspective === 'christ'
-                      ? 'bg-[#E6B35A] text-[#0F172A]'
-                      : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
-                  }`}
+                  <button
+                    type="button"
+                    onClick={() => setServiceTrace('stations')}
+                    className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 ${
+                      serviceTrace === 'stations'
+                        ? 'bg-[#E6B35A] text-[#0F172A]'
+                        : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
+                    }`}
+                  >
+                    Stations
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setServiceTrace('daily')}
+                    className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 ${
+                      serviceTrace === 'daily'
+                        ? 'bg-[#4DC0B0] text-[#090F1A]'
+                        : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
+                    }`}
+                  >
+                    Daily Trace
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setServiceTrace('atonement')}
+                    className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 ${
+                      serviceTrace === 'atonement'
+                        ? 'bg-[#E6B35A] text-[#0F172A]'
+                        : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
+                    }`}
+                  >
+                    Yearly Trace
+                  </button>
+                </div>
+
+                {/* Earthly vs In Christ Toggle */}
+                <div
+                  role="group"
+                  aria-label="Study perspective"
+                  className="inline-flex rounded-lg border border-[#243450] bg-[#0B1220] p-0.5"
                 >
-                  In Christ
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setPerspective('earthly')}
+                    className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 ${
+                      perspective === 'earthly'
+                        ? 'bg-[#E6B35A] text-[#0F172A]'
+                        : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
+                    }`}
+                  >
+                    Earthly Pattern
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPerspective('christ')}
+                    className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors whitespace-nowrap shrink-0 ${
+                      perspective === 'christ'
+                        ? 'bg-[#E6B35A] text-[#0F172A]'
+                        : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
+                    }`}
+                  >
+                    In Christ
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -154,6 +234,28 @@ export function SanctuaryBlueprint({
                     <stop offset="0%" stopColor="#E6B35A" stopOpacity="0.32" />
                     <stop offset="100%" stopColor="#E6B35A" stopOpacity="0" />
                   </radialGradient>
+                  <marker
+                    id="arrow-teal"
+                    viewBox="0 0 10 10"
+                    refX="6"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M 0 1 L 8 5 L 0 9 z" fill="#4DC0B0" />
+                  </marker>
+                  <marker
+                    id="arrow-gold"
+                    viewBox="0 0 10 10"
+                    refX="6"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M 0 1 L 8 5 L 0 9 z" fill="#E6B35A" />
+                  </marker>
                 </defs>
 
                 <rect width="840" height="360" fill="url(#blueprint-grid)" />
@@ -233,14 +335,69 @@ export function SanctuaryBlueprint({
                   MOST HOLY (10 × 10)
                 </text>
 
+                {/* Base East-West Axis */}
                 <path
                   d="M 84 180 L 585 180 L 725 180"
                   fill="none"
                   stroke="#4DC0B0"
-                  strokeOpacity="0.32"
+                  strokeOpacity="0.24"
                   strokeWidth="2"
                   strokeDasharray="4 6"
                 />
+
+                {/* Daily Service Overlay */}
+                {serviceTrace === 'daily' && (
+                  <g>
+                    <path
+                      d="M 84 180 L 205 180 L 325 180 L 560 180"
+                      fill="none"
+                      stroke="#4DC0B0"
+                      strokeWidth="3"
+                      markerEnd="url(#arrow-teal)"
+                    />
+                    <text
+                      x="335"
+                      y="306"
+                      textAnchor="middle"
+                      fill="#4DC0B0"
+                      fontSize="11"
+                      fontFamily="IBM Plex Mono, monospace"
+                    >
+                      DAILY: SIN TRANSFERRED IN TYPE → GATE → ALTAR → LAVER → HOLY PLACE ALTAR OF INCENSE
+                    </text>
+                  </g>
+                )}
+
+                {/* Yearly Day of Atonement Overlay */}
+                {serviceTrace === 'atonement' && (
+                  <g>
+                    <path
+                      d="M 205 180 L 702 180"
+                      fill="none"
+                      stroke="#E6B35A"
+                      strokeWidth="3"
+                      markerEnd="url(#arrow-gold)"
+                    />
+                    <path
+                      d="M 725 204 L 725 268 L 120 268 L 56 306"
+                      fill="none"
+                      stroke="#E6B35A"
+                      strokeWidth="2.5"
+                      strokeDasharray="6 4"
+                      markerEnd="url(#arrow-gold)"
+                    />
+                    <text
+                      x="390"
+                      y="306"
+                      textAnchor="middle"
+                      fill="#E6B35A"
+                      fontSize="11"
+                      fontFamily="IBM Plex Mono, monospace"
+                    >
+                      YEARLY: LORD’S GOAT BLOOD TO ARK → CLEANSED OUTWARD → SCAPEGOAT OUTSIDE CAMP
+                    </text>
+                  </g>
+                )}
 
                 <text
                   x="28"
@@ -322,6 +479,22 @@ export function SanctuaryBlueprint({
                 })}
               </svg>
             </div>
+
+            {serviceTrace !== 'stations' && (
+              <div className="mt-3 rounded-xl border border-[#243450] bg-[#0C1423] px-4 py-3 text-xs leading-relaxed text-[#CBD5E1]">
+                {serviceTrace === 'daily' ? (
+                  <p>
+                    <strong className="text-[#4DC0B0]">Daily Service (Forgiveness &amp; Record):</strong>{' '}
+                    The repentant sinner confessed over the offering at the bronze altar; the priest bore the blood before the veil or onto the horns of the golden altar of incense—transferring pardoned sin in figure into the sanctuary.
+                  </p>
+                ) : (
+                  <p>
+                    <strong className="text-[#E6B35A]">Yearly Service (Day of Atonement Cleansing):</strong>{' '}
+                    With the blood of the Lord’s goat inside the second veil, the high priest cleansed the mercy seat, Holy Place, and altar—then placed all removed transgressions upon Azazel (the scapegoat) to be banished outside the camp.
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
               {SANCTUARY_STATIONS.map((station) => {
@@ -416,18 +589,35 @@ export function SanctuaryBlueprint({
                 Related Study Mission · Mission {String(linkedLesson.id + 1).padStart(2, '0')}
               </p>
               <p className="mt-1 font-medium text-[#F8FAFC]">{linkedLesson.title}</p>
-              <button
-                type="button"
-                onClick={() => onOpenMission(linkedLesson.id)}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#E6B35A] px-4 py-2.5 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#EEBF6D] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E6B35A]"
-              >
-                <span>Open Mission {String(linkedLesson.id + 1).padStart(2, '0')}</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
+              <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={() => onOpenMission(linkedLesson.id)}
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#E6B35A] px-4 py-2.5 text-sm font-semibold text-[#0F172A] transition-colors hover:bg-[#EEBF6D] whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E6B35A]"
+                >
+                  <span>Open Mission {String(linkedLesson.id + 1).padStart(2, '0')}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBookOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#243450] bg-[#0D1627] px-3.5 py-2.5 text-xs font-semibold text-[#CBD5E1] transition-colors hover:border-[#E6B35A]/60 hover:text-[#F8FAFC] whitespace-nowrap shrink-0"
+                >
+                  <BookOpen className="h-3.5 w-3.5 text-[#E6B35A]" />
+                  <span>Read in Book (p. {selectedStation.pdfPage})</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
+
+      <BookReaderModal
+        isOpen={bookOpen}
+        title={`${selectedStation.name} · ${linkedLesson.reading}`}
+        page={selectedStation.pdfPage}
+        onClose={() => setBookOpen(false)}
+      />
     </section>
   );
 }

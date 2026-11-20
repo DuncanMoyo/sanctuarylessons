@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowRight, BookOpen, CheckCircle2, Search, X } from 'lucide-react';
+import { ArrowRight, BookOpen, Check, CheckCircle2, Search, X } from 'lucide-react';
 import {
   LESSONS,
   MissionCategory,
@@ -8,11 +8,16 @@ import {
 
 interface MissionsViewProps {
   completed: number[];
+  readVerses: string[];
+  quizBonusEarned: number[];
+  notes: Record<number, string>;
+  onToggleVerseRead: (lessonId: number, verseIdx: number) => void;
   onOpenLesson: (id: number) => void;
 }
 
 type FilterOption = 'All' | MissionCategory | 'Remaining';
 type ViewTab = 'missions' | 'scriptures';
+type ScriptureFilter = 'all' | 'unread' | 'read';
 
 const FILTER_OPTIONS: FilterOption[] = [
   'All',
@@ -24,10 +29,18 @@ const FILTER_OPTIONS: FilterOption[] = [
   'Remaining',
 ];
 
-export function MissionsView({ completed, onOpenLesson }: MissionsViewProps) {
+export function MissionsView({
+  completed,
+  readVerses,
+  quizBonusEarned,
+  notes,
+  onToggleVerseRead,
+  onOpenLesson,
+}: MissionsViewProps) {
   const [filter, setFilter] = useState<FilterOption>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<ViewTab>('missions');
+  const [scriptureFilter, setScriptureFilter] = useState<ScriptureFilter>('all');
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -65,14 +78,19 @@ export function MissionsView({ completed, onOpenLesson }: MissionsViewProps) {
 
   const scriptureIndex = useMemo(() => {
     const all = getScriptureIndex();
-    if (!normalizedQuery) return all;
-    return all.filter(
-      (entry) =>
+    return all.filter((entry) => {
+      const isRead = readVerses.includes(entry.key);
+      if (scriptureFilter === 'unread' && isRead) return false;
+      if (scriptureFilter === 'read' && !isRead) return false;
+
+      if (!normalizedQuery) return true;
+      return (
         entry.ref.toLowerCase().includes(normalizedQuery) ||
         entry.focus.toLowerCase().includes(normalizedQuery) ||
         entry.missionTitle.toLowerCase().includes(normalizedQuery)
-    );
-  }, [normalizedQuery]);
+      );
+    });
+  }, [normalizedQuery, readVerses, scriptureFilter]);
 
   return (
     <section className="mx-auto max-w-[1160px] px-5 py-10 sm:px-8 sm:py-12">
@@ -144,7 +162,7 @@ export function MissionsView({ completed, onOpenLesson }: MissionsViewProps) {
           )}
         </div>
 
-        {activeTab === 'missions' && (
+        {activeTab === 'missions' ? (
           <div
             role="group"
             aria-label="Filter missions by sanctuary area"
@@ -168,6 +186,36 @@ export function MissionsView({ completed, onOpenLesson }: MissionsViewProps) {
               );
             })}
           </div>
+        ) : (
+          <div
+            role="group"
+            aria-label="Filter Scripture passages by reading status"
+            className="flex flex-wrap items-center gap-1 rounded-xl border border-[#243450] bg-[#111A2B] p-1 w-fit"
+          >
+            {(
+              [
+                { id: 'all', label: 'All Passages' },
+                { id: 'unread', label: 'Unread' },
+                { id: 'read', label: 'Read' },
+              ] as const
+            ).map((opt) => {
+              const active = scriptureFilter === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setScriptureFilter(opt.id)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
+                    active
+                      ? 'bg-[#E6B35A] text-[#0F172A]'
+                      : 'text-[#9CAEC4] hover:text-[#F8FAFC]'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
         )}
       </div>
 
@@ -176,34 +224,60 @@ export function MissionsView({ completed, onOpenLesson }: MissionsViewProps) {
           {scriptureIndex.length === 0 ? (
             <div className="p-10 text-center">
               <p className="text-sm text-[#9CAEC4]">
-                No Scripture references matched "{searchQuery}".
+                {searchQuery
+                  ? `No Scripture references matched "${searchQuery}".`
+                  : scriptureFilter === 'unread'
+                    ? 'All Scripture passages in the curriculum have been marked read.'
+                    : 'No Scripture passages have been marked read yet.'}
               </p>
             </div>
           ) : (
             <div className="divide-y divide-[#243450]">
-              {scriptureIndex.map((entry, idx) => (
-                <button
-                  key={`${entry.missionId}-${entry.ref}-${idx}`}
-                  type="button"
-                  onClick={() => onOpenLesson(entry.missionId)}
-                  className="flex w-full flex-col gap-2 px-6 py-4 text-left transition-colors hover:bg-[#162238] sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-4">
-                    <span className="font-mono text-sm font-semibold text-[#E6B35A] min-w-[140px]">
-                      {entry.ref}
-                    </span>
-                    <span className="text-sm text-[#E2E8F0]">{entry.focus}</span>
+              {scriptureIndex.map((entry, idx) => {
+                const isRead = readVerses.includes(entry.key);
+                return (
+                  <div
+                    key={`${entry.missionId}-${entry.ref}-${idx}`}
+                    className="flex flex-col gap-3 px-6 py-4 transition-colors hover:bg-[#162238] sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="flex items-start gap-3 sm:items-center min-w-0">
+                      <button
+                        type="button"
+                        onClick={() => onToggleVerseRead(entry.missionId, entry.verseIdx)}
+                        aria-pressed={isRead}
+                        aria-label={`Mark ${entry.ref} as ${isRead ? 'unread' : 'read'}`}
+                        className={`mt-0.5 sm:mt-0 flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors ${
+                          isRead
+                            ? 'border-[#4DC0B0] bg-[#4DC0B0] text-[#090F1A]'
+                            : 'border-[#3A5075] bg-[#0A111F] text-transparent hover:border-[#E6B35A]'
+                        }`}
+                      >
+                        <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
+                      </button>
+
+                      <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-4 min-w-0">
+                        <span className="font-mono text-sm font-semibold text-[#E6B35A] min-w-[140px]">
+                          {entry.ref}
+                        </span>
+                        <span className="text-sm text-[#E2E8F0]">{entry.focus}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => onOpenLesson(entry.missionId)}
+                      className="inline-flex items-center gap-2 self-start sm:self-auto text-xs text-[#9CAEC4] hover:text-[#E6B35A] shrink-0"
+                    >
+                      <BookOpen className="h-3.5 w-3.5 text-[#E6B35A]" />
+                      <span>
+                        Mission {String(entry.missionId + 1).padStart(2, '0')}:{' '}
+                        {entry.missionTitle}
+                      </span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-[#9CAEC4] shrink-0">
-                    <BookOpen className="h-3.5 w-3.5 text-[#E6B35A]" />
-                    <span>
-                      Mission {String(entry.missionId + 1).padStart(2, '0')}:{' '}
-                      {entry.missionTitle}
-                    </span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </div>
-                </button>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -230,6 +304,22 @@ export function MissionsView({ completed, onOpenLesson }: MissionsViewProps) {
         <div className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-2">
           {filteredLessons.map((lesson) => {
             const isDone = completed.includes(lesson.id);
+            const versesReadCount = lesson.verses.filter((_, idx) =>
+              readVerses.includes(`${lesson.id}-${idx}`)
+            ).length;
+            const hasQuizBonus = quizBonusEarned.includes(lesson.id);
+            const hasNote = (notes[lesson.id] ?? '').trim().length > 0;
+            const partialParts: string[] = [];
+            if (versesReadCount > 0) {
+              partialParts.push(`${versesReadCount}/${lesson.verses.length} Scriptures`);
+            }
+            if (hasQuizBonus) {
+              partialParts.push('Quiz passed');
+            }
+            if (hasNote) {
+              partialParts.push('Note saved');
+            }
+
             const matchingVerse = normalizedQuery
               ? lesson.verses.find((v) =>
                   `${v.ref} ${v.focus}`.toLowerCase().includes(normalizedQuery)
@@ -244,7 +334,7 @@ export function MissionsView({ completed, onOpenLesson }: MissionsViewProps) {
                 className="group flex flex-col justify-between rounded-2xl border border-[#243450] bg-[#111A2B] p-6 text-left transition-colors duration-150 hover:border-[#E6B35A]/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E6B35A]"
               >
                 <div>
-                  <div className="flex items-center justify-between gap-3 text-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                     <span className="font-mono font-medium text-[#E6B35A]">
                       Mission {String(lesson.id + 1).padStart(2, '0')} · {lesson.category}
                     </span>
@@ -252,6 +342,10 @@ export function MissionsView({ completed, onOpenLesson }: MissionsViewProps) {
                       <span className="inline-flex items-center gap-1 font-medium text-[#4DC0B0]">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         <span>Complete</span>
+                      </span>
+                    ) : partialParts.length > 0 ? (
+                      <span className="font-mono text-[11px] tabular-nums text-[#4DC0B0]">
+                        {partialParts.join(' · ')}
                       </span>
                     ) : (
                       <span className="text-[#9CAEC4]">Not started</span>

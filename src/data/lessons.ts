@@ -64,6 +64,7 @@ export interface SanctuaryStation {
   christFulfillment: string;
   scripture: string;
   missionIndex: number;
+  pdfPage: number;
   svgPos: { x: number; y: number };
 }
 
@@ -1117,6 +1118,7 @@ export const SANCTUARY_STATIONS: SanctuaryStation[] = [
     christFulfillment: 'Jesus declares, “I am the door: by me if any man enter in, he shall be saved” (John 10:9).',
     scripture: 'Exodus 27:16 · John 10:9',
     missionIndex: 2,
+    pdfPage: 77,
     svgPos: { x: 84, y: 180 },
   },
   {
@@ -1130,6 +1132,7 @@ export const SANCTUARY_STATIONS: SanctuaryStation[] = [
     christFulfillment: 'Points directly to Calvary—Christ our Passover and the Lamb of God sacrificed once for all.',
     scripture: 'Exodus 27:1–8 · John 1:29 · Hebrews 10:10',
     missionIndex: 3,
+    pdfPage: 53,
     svgPos: { x: 205, y: 180 },
   },
   {
@@ -1143,6 +1146,7 @@ export const SANCTUARY_STATIONS: SanctuaryStation[] = [
     christFulfillment: 'Represents spiritual cleansing, regeneration, and the washing of water by the Word.',
     scripture: 'Exodus 30:17–21 · Psalm 51:10 · Ephesians 5:26',
     missionIndex: 4,
+    pdfPage: 79,
     svgPos: { x: 325, y: 180 },
   },
   {
@@ -1156,6 +1160,7 @@ export const SANCTUARY_STATIONS: SanctuaryStation[] = [
     christFulfillment: 'Christ the Light of the World, shining through His Spirit and Word to guide His people.',
     scripture: 'Exodus 25:31–40 · John 8:12 · Revelation 4:5',
     missionIndex: 5,
+    pdfPage: 25,
     svgPos: { x: 500, y: 245 },
   },
   {
@@ -1169,6 +1174,7 @@ export const SANCTUARY_STATIONS: SanctuaryStation[] = [
     christFulfillment: 'Christ the Living Bread come down from heaven—continual spiritual nourishment for every tribe.',
     scripture: 'Exodus 25:23–30 · John 6:35, 51',
     missionIndex: 5,
+    pdfPage: 23,
     svgPos: { x: 500, y: 115 },
   },
   {
@@ -1182,6 +1188,7 @@ export const SANCTUARY_STATIONS: SanctuaryStation[] = [
     christFulfillment: 'Symbolizes Christ’s continual intercession and the prayers of the saints perfumed by His righteousness.',
     scripture: 'Exodus 30:1–10 · Revelation 8:3–4',
     missionIndex: 8,
+    pdfPage: 20,
     svgPos: { x: 585, y: 180 },
   },
   {
@@ -1195,6 +1202,7 @@ export const SANCTUARY_STATIONS: SanctuaryStation[] = [
     christFulfillment: 'The throne of God in heaven where justice (His law) and mercy (atonement blood) meet in Christ.',
     scripture: 'Exodus 25:10–22 · Hebrews 4:16 · Revelation 11:19',
     missionIndex: 6,
+    pdfPage: 17,
     svgPos: { x: 725, y: 180 },
   },
 ];
@@ -1344,7 +1352,235 @@ export const ATONEMENT_STEPS: AtonementStep[] = [
   },
 ];
 
+export interface PropheticMilestone {
+  id: string;
+  year: string;
+  propheticSpan: string;
+  title: string;
+  scripture: string;
+  historicalEvent: string;
+  sanctuaryMeaning: string;
+  positionPct: number;
+}
+
+export const PROPHETIC_TIMELINE: PropheticMilestone[] = [
+  {
+    id: '457bc',
+    year: '457 B.C.',
+    propheticSpan: 'Start of 70 Weeks & 2,300 Days',
+    title: 'Decree to Restore & Rebuild Jerusalem',
+    scripture: 'Daniel 9:25 · Ezra 7:11–26',
+    historicalEvent:
+      'In the autumn of 457 B.C., Persian king Artaxerxes Longimanus issued the full decree empowering Ezra to restore Jerusalem’s civil and religious governance.',
+    sanctuaryMeaning:
+      'Establishes the fixed starting anchor for both the 490-year (70 weeks) period allotted to Israel and the full 2,300-year prophecy (Numbers 14:34; Ezekiel 4:6).',
+    positionPct: 0,
+  },
+  {
+    id: '408bc',
+    year: '408 B.C.',
+    propheticSpan: 'End of 7 Weeks (49 Years)',
+    title: 'Jerusalem’s Street & Wall Completed',
+    scripture: 'Daniel 9:25 · Nehemiah 6:15',
+    historicalEvent:
+      'Forty-nine literal years after 457 B.C., Jerusalem’s walls, streets, and temple worship stood restored amid opposition and “troublous times.”',
+    sanctuaryMeaning:
+      'Demonstrates the mathematical precision of the day-year prophetic scale before advancing 62 weeks (434 years) to the Messiah.',
+    positionPct: 14,
+  },
+  {
+    id: '27ad',
+    year: 'A.D. 27',
+    propheticSpan: 'End of 69 Weeks (483 Years)',
+    title: 'Anointing of Messiah the Prince',
+    scripture: 'Daniel 9:25 · Luke 3:1, 21–22',
+    historicalEvent:
+      'Exactly 483 years after 457 B.C., Jesus was baptized in the Jordan, anointed by the Holy Spirit, and proclaimed: “The time is fulfilled.”',
+    sanctuaryMeaning:
+      'As the earthly tabernacle was anointed before service began (Exodus 40:9), Messiah’s baptism inaugurated the antitypical sanctuary ministry.',
+    positionPct: 30,
+  },
+  {
+    id: '31ad',
+    year: 'A.D. 31',
+    propheticSpan: 'Midst of the 70th Week',
+    title: 'Messiah Cut Off at Calvary',
+    scripture: 'Daniel 9:26–27 · Matthew 27:50–51',
+    historicalEvent:
+      'Three and a half years into His public ministry, Christ died on Passover afternoon; the inner temple veil tore from top to bottom.',
+    sanctuaryMeaning:
+      'Haskell notes Calvary as the great seal fixing the entire prophecy: shadow sacrifices ceased in principle as the true Lamb gave His life.',
+    positionPct: 42,
+  },
+  {
+    id: '34ad',
+    year: 'A.D. 34',
+    propheticSpan: 'Close of 70 Weeks (490 Years)',
+    title: 'Gospel Opens to the Gentiles',
+    scripture: 'Daniel 9:24 · Acts 7:55–8:4',
+    historicalEvent:
+      'With the stoning of Stephen and the conversion of Saul, the covenant message moved outward from Jerusalem to all nations.',
+    sanctuaryMeaning:
+      'Completes the 490 years “cut off” (chathak) for Jerusalem, leaving exactly 1,810 years remaining of the 2,300-year span.',
+    positionPct: 54,
+  },
+  {
+    id: '1844ad',
+    year: '1844',
+    propheticSpan: 'End of 2,300 Prophetic Years',
+    title: 'Cleansing of the Heavenly Sanctuary',
+    scripture: 'Daniel 8:14 · Daniel 7:9–10 · Revelation 14:6–7',
+    historicalEvent:
+      'Adding the remaining 1,810 years to A.D. 34 reaches the autumn of 1844—marking the close of the longest prophetic period in Scripture.',
+    sanctuaryMeaning:
+      'In Chapter 27, Haskell links this date with the antitypical Day of Atonement in heaven’s Most Holy Place: the investigative judgment preceding Christ’s return.',
+    positionPct: 100,
+  },
+];
+
+export interface BookChapterJump {
+  label: string;
+  page: number;
+}
+
+export const BOOK_CHAPTER_JUMPS: BookChapterJump[] = [
+  { label: 'Author’s Preface', page: 2 },
+  { label: 'Ch. 1 · Light in Darkness', page: 6 },
+  { label: 'Ch. 4 · Ark & Mercy Seat', page: 17 },
+  { label: 'Ch. 5–7 · Holy Place', page: 20 },
+  { label: 'Ch. 12 · High Priest Robes', page: 35 },
+  { label: 'Ch. 13–16 · Spring Feasts', page: 40 },
+  { label: 'Ch. 17–23 · Offerings', page: 53 },
+  { label: 'Ch. 25 · Court & Laver', page: 77 },
+  { label: 'Ch. 27 · 2,300 Days', page: 82 },
+  { label: 'Ch. 29–30 · Atonement', page: 90 },
+  { label: 'Ch. 31–34 · Jubilee & Refuge', page: 99 },
+];
+
+export interface TypologyDrillPair {
+  id: string;
+  round: 1 | 2 | 3;
+  shadowLabel: string;
+  shadowRef: string;
+  fulfillmentLabel: string;
+  fulfillmentRef: string;
+  missionIndex: number;
+}
+
+export const TYPOLOGY_DRILL_PAIRS: TypologyDrillPair[] = [
+  {
+    id: 'gate',
+    round: 1,
+    shadowLabel: 'Single Eastern Courtyard Gate',
+    shadowRef: 'Exodus 27:16',
+    fulfillmentLabel: '“I am the door” — one entrance to salvation',
+    fulfillmentRef: 'John 10:9',
+    missionIndex: 2,
+  },
+  {
+    id: 'altar',
+    round: 1,
+    shadowLabel: 'Altar of Burnt Offering',
+    shadowRef: 'Exodus 27:1–8',
+    fulfillmentLabel: 'Calvary — Christ sacrificed once for all',
+    fulfillmentRef: 'Hebrews 10:10',
+    missionIndex: 3,
+  },
+  {
+    id: 'laver',
+    round: 1,
+    shadowLabel: 'Polished Bronze Laver',
+    shadowRef: 'Exodus 30:17–21',
+    fulfillmentLabel: 'Washing of regeneration by the Word',
+    fulfillmentRef: 'Ephesians 5:26',
+    missionIndex: 4,
+  },
+  {
+    id: 'trespass-restitution',
+    round: 1,
+    shadowLabel: 'Trespass Offering + 20% Restitution',
+    shadowRef: 'Leviticus 6:4–5',
+    fulfillmentLabel: 'Grace paired with Zacchaeus-style restitution',
+    fulfillmentRef: 'Luke 19:8–9',
+    missionIndex: 3,
+  },
+  {
+    id: 'showbread',
+    round: 2,
+    shadowLabel: 'Twelve Loaves of Showbread',
+    shadowRef: 'Leviticus 24:5–9',
+    fulfillmentLabel: 'Christ the Living Bread for every tribe',
+    fulfillmentRef: 'John 6:35, 51',
+    missionIndex: 5,
+  },
+  {
+    id: 'lampstand',
+    round: 2,
+    shadowLabel: 'Seven-Branched Golden Lampstand',
+    shadowRef: 'Exodus 25:31–40',
+    fulfillmentLabel: 'Light of the World & Seven Spirits of God',
+    fulfillmentRef: 'John 8:12 · Rev. 4:5',
+    missionIndex: 5,
+  },
+  {
+    id: 'incense',
+    round: 2,
+    shadowLabel: 'Golden Altar of Incense',
+    shadowRef: 'Exodus 30:1–10',
+    fulfillmentLabel: 'Christ’s merits ascending with saints’ prayers',
+    fulfillmentRef: 'Revelation 8:3–4',
+    missionIndex: 8,
+  },
+  {
+    id: 'breastplate',
+    round: 2,
+    shadowLabel: 'Breastplate of Twelve Stones',
+    shadowRef: 'Exodus 28:15–30',
+    fulfillmentLabel: 'High Priest bearing His people over His heart',
+    fulfillmentRef: 'Revelation 3:5',
+    missionIndex: 7,
+  },
+  {
+    id: 'passover',
+    round: 3,
+    shadowLabel: 'Passover Lamb Slain on 14 Abib',
+    shadowRef: 'Exodus 12:6, 46',
+    fulfillmentLabel: 'Christ crucified on 14 Nisan, no bone broken',
+    fulfillmentRef: '1 Cor. 5:7 · John 19:36',
+    missionIndex: 9,
+  },
+  {
+    id: 'firstfruits',
+    round: 3,
+    shadowLabel: 'Wave Sheaf of Barley Firstfruits',
+    shadowRef: 'Leviticus 23:10–11',
+    fulfillmentLabel: 'Christ risen on the third day as Firstfruits',
+    fulfillmentRef: '1 Corinthians 15:20',
+    missionIndex: 9,
+  },
+  {
+    id: 'scapegoat',
+    round: 3,
+    shadowLabel: 'Scapegoat Sent to the Wilderness',
+    shadowRef: 'Leviticus 16:20–22',
+    fulfillmentLabel: 'Sin returned on Satan & banished 1,000 years',
+    fulfillmentRef: 'Revelation 20:1–3',
+    missionIndex: 10,
+  },
+  {
+    id: 'jubilee',
+    round: 3,
+    shadowLabel: 'Jubilee Trumpet & Cities of Refuge',
+    shadowRef: 'Leviticus 25:9–10 · Josh. 20',
+    fulfillmentLabel: 'Christ our Refuge now; redeemed earth restored',
+    fulfillmentRef: 'Hebrews 6:18 · Rev. 21:3',
+    missionIndex: 12,
+  },
+];
+
 export interface ScriptureIndexEntry {
+  key: string;
+  verseIdx: number;
   ref: string;
   focus: string;
   missionId: number;
@@ -1354,8 +1590,10 @@ export interface ScriptureIndexEntry {
 export function getScriptureIndex(): ScriptureIndexEntry[] {
   const entries: ScriptureIndexEntry[] = [];
   LESSONS.forEach((lesson) => {
-    lesson.verses.forEach((verse) => {
+    lesson.verses.forEach((verse, verseIdx) => {
       entries.push({
+        key: `${lesson.id}-${verseIdx}`,
+        verseIdx,
         ref: verse.ref,
         focus: verse.focus,
         missionId: lesson.id,
