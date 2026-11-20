@@ -1,0 +1,107 @@
+{
+  "entities": {
+    "StudyProfile": {
+      "title": "StudyProfile",
+      "description": "Synced Bible study progress, XP, completed missions, and verse reading checklist for an authenticated learner.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the profile owner.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "completedMissions": {
+          "type": "array",
+          "description": "Zero-indexed mission IDs completed by the learner (max 13)."
+        },
+        "quizBonusEarned": {
+          "type": "array",
+          "description": "Zero-indexed mission IDs where perfect quiz bonus XP was awarded (max 13)."
+        },
+        "readVerses": {
+          "type": "array",
+          "description": "Checked scripture reference keys in 'missionId-verseIdx' format (max 100)."
+        },
+        "xp": {
+          "type": "number",
+          "description": "Total experience points earned (0 to 5000)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the study profile was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the latest progress update."
+        }
+      },
+      "required": [
+        "ownerId",
+        "completedMissions",
+        "quizBonusEarned",
+        "readVerses",
+        "xp",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "MissionNote": {
+      "title": "MissionNote",
+      "description": "Personal Mystery Challenge reflection note written for a specific study mission.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the note author.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "missionId": {
+          "type": "string",
+          "description": "Zero-indexed mission identifier string.",
+          "minLength": 1,
+          "maxLength": 2,
+          "pattern": "^[0-9]{1,2}$"
+        },
+        "content": {
+          "type": "string",
+          "description": "Learner's reflection text.",
+          "minLength": 0,
+          "maxLength": 5000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the note was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the latest note edit."
+        }
+      },
+      "required": [
+        "ownerId",
+        "missionId",
+        "content",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/studyProfiles/{userId}": {
+      "schema": { "$ref": "#/entities/StudyProfile" },
+      "description": "Private study progress document owned by a single verified learner."
+    },
+    "/studyProfiles/{userId}/notes/{missionId}": {
+      "schema": { "$ref": "#/entities/MissionNote" },
+      "description": "Subcollection of personal reflection notes per mission owned by the parent profile owner."
+    }
+  }
+}

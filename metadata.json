@@ -1,0 +1,6 @@
+{
+  "name": "Sanctuary Quest",
+  "description": "An interactive Bible study adventure exploring the sanctuary symbols, priesthood, and plan of redemption inspired by The Cross and Its Shadow by S. N. Haskell.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
